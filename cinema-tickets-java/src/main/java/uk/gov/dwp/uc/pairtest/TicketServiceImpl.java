@@ -66,7 +66,7 @@ public class TicketServiceImpl implements TicketService {
 
         if(accountId <= 0){
             logger.error("Account ID is less than or equal to zero, Invalid account id provided");
-            throw new InvalidPurchaseException("Account ID is null, Invalid account id provided");
+            throw new InvalidPurchaseException("Account ID is less than or equal to zero, Invalid account id provided");
         }
 
         // Checking the request input to process ticket reservation.
@@ -79,12 +79,12 @@ public class TicketServiceImpl implements TicketService {
         // Checking Ticket request for Infant and Child
         Map<TicketTypeRequest.Type, Integer> ticketRequestMap = ticketTypeRequestsList.stream().collect(Collectors.toMap(TicketTypeRequest::getTicketType,TicketTypeRequest::getNoOfTickets));
         if(ticketTypeRequestsList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.INFANT)){
-            logger.error("Invalid ticket request, Type of Ticket is Infant");
-            throw new InvalidPurchaseException("Invalid ticket request");
+            logger.error("Invalid ticket request, Type of request is Infant alone");
+            throw new InvalidPurchaseException("Invalid ticket request, Type of request is Infant alone");
         }
         if(ticketTypeRequestsList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.CHILD)){
-            logger.error("Invalid ticket request, Type of Ticket is Child");
-            throw new InvalidPurchaseException("Invalid ticket request");
+            logger.error("Invalid ticket request, Type of request is child alone");
+            throw new InvalidPurchaseException("Invalid ticket request, Type of request is child alone");
         }
 
         // Checking Child and Infant tickets as it cannot be purchased without purchasing an Adult ticket

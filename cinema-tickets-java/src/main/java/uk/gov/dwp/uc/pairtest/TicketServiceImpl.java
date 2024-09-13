@@ -42,6 +42,9 @@ public class TicketServiceImpl implements TicketService {
      * @return
      */
     private int totalSeatsToAllocate(Map<TicketTypeRequest.Type, Integer> ticketRequest){
+        for (Map.Entry<TicketTypeRequest.Type, Integer> entry : ticketRequest.entrySet()) {
+            System.out.println("totalSeatsToAllocate...."+entry.getKey() + "/" + entry.getValue());
+        }
         return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(Map.Entry::getValue).reduce(0,Integer::sum);
     }
 
@@ -51,13 +54,25 @@ public class TicketServiceImpl implements TicketService {
      * @return
      */
     private int totalAmountToPay(Map<TicketTypeRequest.Type, Integer> ticketRequest){
+        for (Map.Entry<TicketTypeRequest.Type, Integer> entry : ticketRequest.entrySet()) {
+            System.out.println("totalAmountToPay...."+entry.getKey() + "/" + entry.getValue());
+        }
         return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(e -> e.getKey().getTicPrice() * e.getValue()).reduce(0,Integer::sum);
     }
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
 
-        logger.info("purchaseTickets Method");
+        // Input details, debugging start
+
+        System.out.println("...................Input details, debugging start...................");
+
+        System.out.println("ticketTypeRequests length....."+ticketTypeRequests.length);
+
+        System.out.println("...................Input details, debugging end.....................");
+
+        // Input details, debugging start
+
 
         if(accountId == null){
             logger.error("Account ID is null, Invalid account id provided");

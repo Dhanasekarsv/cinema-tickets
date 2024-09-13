@@ -67,7 +67,7 @@ public class TicketServiceTest {
         assertEquals("Maximum ticket count exceeded", exception.getMessage());
     }
     /**
-     * Test case to check ticket with account Id is null
+     * Test case to check ticket with Account Id is null
      */
     @Test
     public void accountIdIsNull_Throw_Exception(){
@@ -75,6 +75,17 @@ public class TicketServiceTest {
         TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,3);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestAdult));
         assertEquals("Account ID is null, Invalid account id provided", exception.getMessage());
+    }
+
+    /**
+     * Test case to check ticket with Account id is not valid
+     */
+    @Test
+    public void ifAccountIdIsNotValid_Throw_Exception(){
+        long accountId = -1;
+        TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,2);
+        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult));
+        assertEquals("Account ID is less than or equal to zero, Invalid account id provided", exception.getMessage());
     }
 
     /**
@@ -110,16 +121,7 @@ public class TicketServiceTest {
         assertEquals("Invalid ticket request", exception.getMessage());
     }
 
-    /**
-     * Account id is not valid
-     */
-    @Test
-    public void ifAccountIdIsNotValid_Throw_Exception(){
-        long accountId = -1;
-        TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,2);
-        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult));
-        assertEquals("Account ID is less than or equal to zero, Invalid account id provided", exception.getMessage());
-    }
+
 
     /**
      * Multiple ticket purchase

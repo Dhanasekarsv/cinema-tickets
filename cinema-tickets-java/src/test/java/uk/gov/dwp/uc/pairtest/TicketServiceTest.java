@@ -23,9 +23,9 @@ public class TicketServiceTest {
     @Test
     public void purchase_Tickets_Without_AdultTicket(){
         long accountId = 1234L;
-        TicketTypeRequest t2 =  new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 10);
-        TicketTypeRequest t3 =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
-        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, t2, t3));
+        TicketTypeRequest ticketTypeRequestChild =  new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 10);
+        TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
+        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestChild, ticketTypeRequestInfant));
         assertEquals("Please add atleast one adult", exception.getMessage());
     }
 
@@ -47,9 +47,9 @@ public class TicketServiceTest {
     @Test
     public void purchase_Tickets_With_InvalidAccountNumber(){
         long accountId = 0L;
-        TicketTypeRequest t2 =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 10);
-        TicketTypeRequest t3 =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
-        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, t2, t3));
+        TicketTypeRequest ticketTypeRequestAdult =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 10);
+        TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
+        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestAdult, ticketTypeRequestInfant));
         assertEquals("Account ID is null, Invalid account id provided", exception.getMessage());
 
     }
@@ -60,10 +60,10 @@ public class TicketServiceTest {
     @Test
     public void ticketCountExceedMaximumLimit_Throw_Exception(){
         long accountId = 1000L;
-        TicketTypeRequest t1 =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 11);
-        TicketTypeRequest t2 =  new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 10);
-        TicketTypeRequest t3 =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
-        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,t1,t2,t3));
+        TicketTypeRequest ticketTypeRequestAdult =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 11);
+        TicketTypeRequest ticketTypeRequestChild =  new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 10);
+        TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
+        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult,ticketTypeRequestChild,ticketTypeRequestInfant));
         assertEquals("Maximum ticket count exceeded", exception.getMessage());
     }
     /**
@@ -105,8 +105,8 @@ public class TicketServiceTest {
     @Test
     public void infantAndChildWithoutAdultPurchaseTicket_Throw_Exception(){
         long accountId = 99;
-        TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
         TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.CHILD,1);
+        TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestChild,ticketTypeRequestInfant));
         assertEquals("Please add atleast one adult", exception.getMessage());
     }

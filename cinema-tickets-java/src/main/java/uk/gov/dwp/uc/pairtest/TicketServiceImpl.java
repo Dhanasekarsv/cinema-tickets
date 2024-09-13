@@ -39,25 +39,39 @@ public class TicketServiceImpl implements TicketService {
     /**
      *  Calculate total seats to allocate for reservation
      * @param ticketRequest
-     * @return
+     * @return total seats as per the request
      */
+
     private int totalSeatsToAllocate(Map<TicketTypeRequest.Type, Integer> ticketRequest){
+        /*
+        //int totalSeats=0;
         for (Map.Entry<TicketTypeRequest.Type, Integer> entry : ticketRequest.entrySet()) {
-            System.out.println("totalSeatsToAllocate...."+entry.getKey() + "/" + entry.getValue());
+            System.out.println("totalSeatsToAllocate....:"+entry.getKey() + "/" + entry.getValue());
+            if(!entry.getKey().toString().equals("INFANT"))
+            {
+                totalSeats = totalSeats+ entry.getValue();
+            }
+            System.out.println("For loop total values....:"+totalSeats);
         }
-        return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(Map.Entry::getValue).reduce(0,Integer::sum);
+
+         */
+
+        //return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(Map.Entry::getValue).reduce(0,Integer::sum);
+        return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(Map.Entry::getValue).mapToInt(d->d).sum();
     }
 
     /**
      * Calculate total amount to pay for the reserved seats
      * @param ticketRequest
-     * @return
+     * @return total amount as per ticket fare
      */
+    int totalSeatsPrice=0;
     private int totalAmountToPay(Map<TicketTypeRequest.Type, Integer> ticketRequest){
         for (Map.Entry<TicketTypeRequest.Type, Integer> entry : ticketRequest.entrySet()) {
             System.out.println("totalAmountToPay...."+entry.getKey() + "/" + entry.getValue());
         }
-        return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(e -> e.getKey().getTicPrice() * e.getValue()).reduce(0,Integer::sum);
+        //return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(e -> e.getKey().getTicPrice() * e.getValue()).reduce(0,Integer::sum);
+        return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(e -> e.getKey().getTicPrice() * e.getValue()).mapToInt(d->d).sum();
     }
 
     @Override
@@ -65,11 +79,11 @@ public class TicketServiceImpl implements TicketService {
 
         // Input details, debugging start
 
-        System.out.println("...................Input details, debugging start...................");
-
+        System.out.println("...................Input details,debugging start...................");
+        logger.info("ticketTypeRequests length....."+ticketTypeRequests.length);
         System.out.println("ticketTypeRequests length....."+ticketTypeRequests.length);
 
-        System.out.println("...................Input details, debugging end.....................");
+        System.out.println("...................Input details,debugging end.....................");
 
         // Input details, debugging start
 
@@ -91,12 +105,14 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidPurchaseException("Invalid ticket request");
         }
 
-        // Checking Ticket request for Infant and Child
+        // Checking Ticket request for Infant
         Map<TicketTypeRequest.Type, Integer> ticketRequestMap = ticketTypeRequestsList.stream().collect(Collectors.toMap(TicketTypeRequest::getTicketType,TicketTypeRequest::getNoOfTickets));
         if(ticketTypeRequestsList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.INFANT)){
             logger.error("Invalid ticket request, Type of request is Infant alone");
             throw new InvalidPurchaseException("Invalid ticket request, Type of request is Infant alone");
         }
+
+        // Checking Ticket request for Child
         if(ticketTypeRequestsList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.CHILD)){
             logger.error("Invalid ticket request, Type of request is child alone");
             throw new InvalidPurchaseException("Invalid ticket request, Type of request is child alone");

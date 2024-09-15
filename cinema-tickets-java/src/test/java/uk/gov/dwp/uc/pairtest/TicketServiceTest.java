@@ -47,7 +47,7 @@ public class TicketServiceTest {
 
     @Test
     public void purchase_Tickets_With_InvalidAccountNumber(){
-        long accountId = 0L;
+        long accountId = 2L;
         TicketTypeRequest ticketTypeRequestAdult =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 10);
         TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestAdult, ticketTypeRequestInfant));
@@ -59,13 +59,14 @@ public class TicketServiceTest {
      */
     @Test
     public void ticketCountExceedMaximumLimit_Throw_Exception(){
-        long accountId = 1000L;
+        long accountId = 100L;
         TicketTypeRequest ticketTypeRequestAdult =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 11);
         TicketTypeRequest ticketTypeRequestChild =  new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 10);
         TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult,ticketTypeRequestChild,ticketTypeRequestInfant));
         assertEquals("Maximum ticket count exceeded", exception.getMessage());
     }
+
     /**
      * Test case to check ticket with Account Id is null
      */
@@ -82,7 +83,7 @@ public class TicketServiceTest {
      */
     @Test
     public void ifAccountIdIsNotValid_Throw_Exception(){
-        long accountId = -1;
+        long accountId = -2;
         TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,2);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult));
         assertEquals("Account ID is less than or equal to zero, Invalid account id provided", exception.getMessage());
@@ -93,7 +94,7 @@ public class TicketServiceTest {
      */
     @Test
     public void invalidPurchaseTicket_Throw_Exception(){
-        long accountId = 12;
+        long accountId = 21;
         TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestChild));
         assertEquals("Invalid ticket request, Type of request is Infant alone", exception.getMessage());
@@ -104,20 +105,19 @@ public class TicketServiceTest {
      */
     @Test
     public void infantAndChildWithoutAdultPurchaseTicket_Throw_Exception(){
-        long accountId = 70;
+        long accountId = 80;
         TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.CHILD,1);
         TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestChild,ticketTypeRequestInfant));
         assertEquals("Please add atleast one adult", exception.getMessage());
     }
 
-
     /**
      * Infant and Child without adult ticket purchase
      */
     @Test
     public void ChildWithoutAdultPurchaseTicket_Throw_Exception(){
-        long accountId = 99;
+        long accountId = 33;
         TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.CHILD,1);
         TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestInfant,ticketTypeRequestChild));
@@ -129,18 +129,17 @@ public class TicketServiceTest {
      */
     @Test
     public void ifTicketDetailsIsMissing_Throw_Exception(){
-        long accountId = 45;
+        long accountId = 54;
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId));
         assertEquals("Invalid ticket request", exception.getMessage());
     }
-
 
     /**
      * Multiple ticket purchase : Success Scenario
      */
     @Test
     public void multiple_ticket_purchase_success(){
-        long accountId = 499;
+        long accountId = 945;
         TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,2);
         TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.CHILD,1);
         TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
@@ -152,16 +151,17 @@ public class TicketServiceTest {
      */
     @Test
     public void ticket_purchase_success(){
-        long accountId = 777;
+        long accountId = 45;
         TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,1);
         ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult);
     }
+
     /**
      * Ticket purchase success with Wrapper account id
      */
     @Test
     public void ticket_purchase_success_with_wrapper(){
-        Long accountId = Long.valueOf(678);
+        Long accountId = Long.valueOf(234);
         TicketTypeRequest ticketTypeRequestAdult = new TicketTypeRequest(TicketTypeRequest.Type.ADULT,1);
         ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestAdult);
     }

@@ -18,6 +18,7 @@ public class TicketServiceTest {
 
     /**
      * Test case to Purchase Tickets without adult ticket
+     * AssertThrows() helps to test multiple exceptions
      */
 
     @Test

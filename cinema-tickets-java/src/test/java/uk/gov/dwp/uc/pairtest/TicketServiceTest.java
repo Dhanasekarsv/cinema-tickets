@@ -89,7 +89,7 @@ public class TicketServiceTest {
     }
 
     /**
-     * Invalid ticket purchase
+     * Invalid ticket purchase : Infant Only Request
      */
     @Test
     public void invalidPurchaseTicket_Throw_Exception(){
@@ -104,15 +104,28 @@ public class TicketServiceTest {
      */
     @Test
     public void infantAndChildWithoutAdultPurchaseTicket_Throw_Exception(){
-        long accountId = 99;
+        long accountId = 70;
         TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.CHILD,1);
         TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestChild,ticketTypeRequestInfant));
         assertEquals("Please add atleast one adult", exception.getMessage());
     }
 
+
     /**
-     * Invalid ticket request
+     * Infant and Child without adult ticket purchase
+     */
+    @Test
+    public void ChildWithoutAdultPurchaseTicket_Throw_Exception(){
+        long accountId = 99;
+        TicketTypeRequest ticketTypeRequestChild = new TicketTypeRequest(TicketTypeRequest.Type.CHILD,1);
+        TicketTypeRequest ticketTypeRequestInfant = new TicketTypeRequest(TicketTypeRequest.Type.INFANT,1);
+        InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId,ticketTypeRequestInfant,ticketTypeRequestChild));
+        assertEquals("Please add atleast one adult", exception.getMessage());
+    }
+
+    /**
+     * Invalid ticket request : Ticket Details are missing
      */
     @Test
     public void ifTicketDetailsIsMissing_Throw_Exception(){
@@ -122,9 +135,8 @@ public class TicketServiceTest {
     }
 
 
-
     /**
-     * Multiple ticket purchase
+     * Multiple ticket purchase : Success Scenario
      */
     @Test
     public void multiple_ticket_purchase_success(){
@@ -136,7 +148,7 @@ public class TicketServiceTest {
     }
 
     /**
-     * Ticket purchase success
+     * Ticket purchase success : Success Scenario
      */
     @Test
     public void ticket_purchase_success(){

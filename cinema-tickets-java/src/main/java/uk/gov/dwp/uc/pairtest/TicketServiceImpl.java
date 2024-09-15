@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TicketServiceImpl implements TicketService {
+
     /**
      * Should only have private methods other than the one below.
      */
@@ -43,50 +44,26 @@ public class TicketServiceImpl implements TicketService {
      */
 
     private int totalSeatsToAllocate(Map<TicketTypeRequest.Type, Integer> ticketRequest){
-        /*
-        //int totalSeats=0;
-        for (Map.Entry<TicketTypeRequest.Type, Integer> entry : ticketRequest.entrySet()) {
-            System.out.println("totalSeatsToAllocate....:"+entry.getKey() + "/" + entry.getValue());
-            if(!entry.getKey().toString().equals("INFANT"))
-            {
-                totalSeats = totalSeats+ entry.getValue();
-            }
-            System.out.println("For loop total values....:"+totalSeats);
-        }
-
-         */
-
-        //return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(Map.Entry::getValue).reduce(0,Integer::sum);
-        return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(Map.Entry::getValue).mapToInt(d->d).sum();
+        return ticketRequest.entrySet().stream()
+                .filter(e -> e.getKey().getTicPrice() != 0)
+                .map(Map.Entry::getValue)
+                .reduce(0, (x,y) -> x+y);
     }
-
     /**
      * Calculate total amount to pay for the reserved seats
      * @param ticketRequest
-     * @return total amount as per ticket fare
+     * @return total amount as per ticket fare and ticket count
      */
-    int totalSeatsPrice=0;
     private int totalAmountToPay(Map<TicketTypeRequest.Type, Integer> ticketRequest){
-        for (Map.Entry<TicketTypeRequest.Type, Integer> entry : ticketRequest.entrySet()) {
-            System.out.println("totalAmountToPay...."+entry.getKey() + "/" + entry.getValue());
-        }
-        //return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(e -> e.getKey().getTicPrice() * e.getValue()).reduce(0,Integer::sum);
-        return ticketRequest.entrySet().stream().filter(e -> e.getKey().getTicPrice() != 0).map(e -> e.getKey().getTicPrice() * e.getValue()).mapToInt(d->d).sum();
+        return ticketRequest.entrySet().stream() //Stream to process collection
+                .filter(e -> e.getKey().getTicPrice() != 0) //Filter or skip Infants
+                .map(e -> e.getKey().getTicPrice() * e.getValue()) // Calculate price based on seat
+                .reduce(0, (x,y) -> x+y);//sum the price
     }
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
-
-        // Input details, debugging start
-
-        System.out.println("...................Input details,debugging start...................");
-        logger.info("ticketTypeRequests length....."+ticketTypeRequests.length);
-        System.out.println("ticketTypeRequests length....."+ticketTypeRequests.length);
-
-        System.out.println("...................Input details,debugging end.....................");
-
-        // Input details, debugging start
-
+        logger.info("execution.....................................execution");
 
         if(accountId == null){
             logger.error("Account ID is null, Invalid account id provided");
@@ -128,8 +105,7 @@ public class TicketServiceImpl implements TicketService {
 
         // Get total seats to allocate for ticket purchase.
         int totalSeatsToAllocate = totalSeatsToAllocate(ticketRequestMap);
-
-        System.out.println("Total Seat allocated..."+totalSeatsToAllocate);
+        logger.debug("Total Tickets count request.."+totalSeatsToAllocate);
 
         if(isTicketCountExceeded(totalSeatsToAllocate)){
             logger.error("Maximum ticket count exceeded.");
@@ -138,8 +114,7 @@ public class TicketServiceImpl implements TicketService {
 
         // Get total amount to pay for ticket purchase.
         int totalAmountToPay = totalAmountToPay(ticketRequestMap);
-
-        System.out.println("Total Amount to pay..."+totalAmountToPay);
+        logger.debug("Total ticket fare for the request.."+totalAmountToPay);
 
         // Seat reservation request.
         seatReservationService.reserveSeat(accountId, totalSeatsToAllocate);
@@ -151,3 +126,4 @@ public class TicketServiceImpl implements TicketService {
 
 
 }
+

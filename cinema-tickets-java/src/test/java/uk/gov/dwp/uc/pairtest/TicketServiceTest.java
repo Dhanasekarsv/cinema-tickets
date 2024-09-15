@@ -50,7 +50,7 @@ public class TicketServiceTest {
         TicketTypeRequest ticketTypeRequestAdult =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 10);
         TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestAdult, ticketTypeRequestInfant));
-        assertEquals("Account ID is null, Invalid account id provided", exception.getMessage());
+        assertEquals("Account ID is less than or equal to zero, Invalid account id provided", exception.getMessage());
 
     }
 

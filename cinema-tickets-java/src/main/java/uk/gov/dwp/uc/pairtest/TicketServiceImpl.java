@@ -48,7 +48,9 @@ public class TicketServiceImpl implements TicketService {
                 .filter(e -> e.getKey().getTicPrice() != 0)
                 .map(Map.Entry::getValue)
                 .reduce(0, (x,y) -> x+y);
+
     }
+
     /**
      * Calculate total amount to pay for the reserved seats
      * @param ticketRequest
@@ -63,7 +65,6 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
-        logger.info("execution.....................................execution");
 
         if(accountId == null){
             logger.error("Account ID is null, Invalid account id provided");
@@ -76,21 +77,21 @@ public class TicketServiceImpl implements TicketService {
         }
 
         // Checking the request input to process ticket reservation.
-        List<TicketTypeRequest> ticketTypeRequestsList = Arrays.asList(ticketTypeRequests);
-        if(ticketTypeRequestsList.isEmpty()){
+        List<TicketTypeRequest> ticketTypeRequestList = Arrays.asList(ticketTypeRequests);
+        if(ticketTypeRequestList.isEmpty()){
             logger.error("Invalid ticket request, Ticket Request is Empty");
             throw new InvalidPurchaseException("Invalid ticket request");
         }
 
         // Checking Ticket request for Infant
-        Map<TicketTypeRequest.Type, Integer> ticketRequestMap = ticketTypeRequestsList.stream().collect(Collectors.toMap(TicketTypeRequest::getTicketType,TicketTypeRequest::getNoOfTickets));
-        if(ticketTypeRequestsList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.INFANT)){
+        Map<TicketTypeRequest.Type, Integer> ticketRequestMap = ticketTypeRequestList.stream().collect(Collectors.toMap(TicketTypeRequest::getTicketType,TicketTypeRequest::getNoOfTickets));
+        if(ticketTypeRequestList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.INFANT)){
             logger.error("Invalid ticket request, Type of request is Infant alone");
             throw new InvalidPurchaseException("Invalid ticket request, Type of request is Infant alone");
         }
 
         // Checking Ticket request for Child
-        if(ticketTypeRequestsList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.CHILD)){
+        if(ticketTypeRequestList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.CHILD)){
             logger.error("Invalid ticket request, Type of request is child alone");
             throw new InvalidPurchaseException("Invalid ticket request, Type of request is child alone");
         }

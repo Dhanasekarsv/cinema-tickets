@@ -22,17 +22,9 @@ public class TicketTypeRequest {
         return type;
     }
 
-/*
-
-    public enum Type {
-        ADULT, CHILD , INFANT
-    }
-
- */
-
     public enum Type {
         ADULT(20), CHILD(10) , INFANT(0);
-        private final int ticPrice;
+    private final int ticPrice;
         Type(int ticPrice){
             this.ticPrice = ticPrice;
         }

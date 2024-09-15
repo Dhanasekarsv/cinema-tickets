@@ -47,7 +47,7 @@ public class TicketServiceTest {
 
     @Test
     public void purchase_Tickets_With_InvalidAccountNumber(){
-        long accountId = 2L;
+        long accountId = 0L;
         TicketTypeRequest ticketTypeRequestAdult =  new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 10);
         TicketTypeRequest ticketTypeRequestInfant =  new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 5);
         InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class, ()->ticketServiceImpl.purchaseTickets(accountId, ticketTypeRequestAdult, ticketTypeRequestInfant));

@@ -25,5 +25,5 @@ Run the Project
    
    > mvn clean install : Download and install Dependencies.
    
-   > mvn verify : To Run and Test as TestCases
+   > mvn verify : To Run and Test all TestCases
 

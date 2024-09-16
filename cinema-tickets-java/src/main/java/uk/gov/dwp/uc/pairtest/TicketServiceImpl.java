@@ -83,6 +83,14 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidPurchaseException("Invalid ticket request");
         }
 
+        // Checking Ticket price for Negative Value
+        for (TicketTypeRequest ticketTypeRequest : ticketTypeRequestList) {
+            if (ticketTypeRequest.getNoOfTickets() < 0) {
+                logger.error("Ticket Price on request cant be negative value");
+                throw new InvalidPurchaseException("Ticket Price on request cant be negative value");
+            }
+        }
+
         // Checking Ticket request for Infant
         Map<TicketTypeRequest.Type, Integer> ticketRequestMap = ticketTypeRequestList.stream().collect(Collectors.toMap(TicketTypeRequest::getTicketType,TicketTypeRequest::getNoOfTickets));
         if(ticketTypeRequestList.size() == 1 && ticketRequestMap.containsKey(TicketTypeRequest.Type.INFANT)){
